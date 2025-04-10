@@ -1,0 +1,52 @@
+#check docker version -->
+docker --version
+
+#get running containers -->
+docker ps
+
+#get running + exited container -->
+docker ps -a
+
+#run container -->
+docker run 
+
+#run container in detached mode --> 
+docker run -d 
+
+#assign environment variables to container --> 
+docker run -e 
+
+#attahce volume -->
+docker run -v <host_dir_path> <container_dir_path>
+
+#inspect container --> 
+docker inspect
+
+#get conatiner logs --> 
+docker logs <conatiner_name>
+
+#host and container port mapping 
+docker run -p 80:5000 <container_name>
+80 ---> Host port
+5000 --> conatiner port 
+
+
+#stop the container 
+docker stop <conatainer_name>
+
+
+
+
+
+
+
+
+
+
+
+#get docker images --> 
+docker images 
+
+#remove images
+docker rm <image_id>
+
