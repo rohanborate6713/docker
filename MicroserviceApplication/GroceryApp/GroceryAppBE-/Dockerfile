@@ -5,7 +5,7 @@
 ## add "dotenv": "^16.0.3" in dependencies in package.json
 
 
-## This is a Node.js application
+## This is a Node.js application Dockerfile
 ## Base image
 FROM node:18-alpine
 
@@ -16,7 +16,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --production
+RUN npm install
 
 # Copy the rest of the application files
 COPY . .
@@ -28,4 +28,4 @@ RUN npm install -g pm2
 EXPOSE 5000
 
 # Start the application using pm2
-CMD ["pm2-runtime", "start", "server.js", "--name", "grocery-app"]
+CMD ["pm2-runtime", "start", "server.js", "--name", "grocery-backend"]

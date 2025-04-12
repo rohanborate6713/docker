@@ -74,7 +74,7 @@ docker tag <image_id> grocery-backend:latest
 #run your image
 
 run -d -p 5000:500 --name <container_name> <images_name>
-docker run -d -p 5000:500 --name grocery-backend-container grocery-backend:latest
+docker run -d -p 5000:5000 --name grocery-backend-container grocery-backend:latest
 
 docker run -d \
   --name grocery-mongo \
@@ -95,3 +95,25 @@ create mongo container
 
 
 ##################################################################
+
+push image to docker hub 
+docker login <username>
+
+tag image 
+docker tag grocery-backend:latest yourusername/grocery-backend:latest
+
+push image 
+docker push yourusername/grocery-backend:latest
+
+#####
+
+frontend container deployement 
+errors --> 
+2025-04-12T18:34:15: PM2 log: Launching in no daemon mode
+2025-04-12T18:34:15: PM2 error: Script not found: /app/serve
+2025-04-12T18:34:15: PM2 log: PM2 successfully stopped
+
+solution instead of 
+CMD ["pm2-runtime", "serve", "build", "3000", "--name", "grocery-frontend", "--spa"]
+use 
+CMD pm2 serve build 3000 --spa --name "grocery-frontend"
