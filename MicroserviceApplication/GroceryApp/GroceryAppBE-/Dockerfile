@@ -1,6 +1,8 @@
 
 ##app source code --> 
 ## GroceryAppBE-https://github.com/AnupDudhe/GroceryAppBE-.git
+##note --> required changes in src code , package.json 
+## add "dotenv": "^16.0.3" in dependencies in package.json
 
 
 ## This is a Node.js application
