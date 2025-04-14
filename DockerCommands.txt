@@ -4,6 +4,9 @@ docker --version
 #get running containers -->
 docker ps
 
+#newgrp docker
+
+
 #get running + exited container -->
 docker ps -a
 
@@ -118,3 +121,12 @@ CMD ["pm2-runtime", "serve", "build", "3000", "--name", "grocery-frontend", "--s
 use 
 CMD pm2 serve build 3000 --spa --name "grocery-frontend"
 
+#
+#remove all docker unused objects 
+docker system prune -a --volumes
+
+#######
+todos app -->
+requires portfinder in package.json
+
+cat /etc/mongod.conf 
