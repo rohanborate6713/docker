@@ -1,0 +1,38 @@
+##To deploy application using docker compose
+
+#for nginx container we have to edit deafault.conf file 
+#we have mentioned this in docker-compose.yml
+
+volumes:
+        - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+
+# create a file named default.conf in nginx folder and add the following code
+# this file is used to configure nginx to route traffic to the frontend and backend services
+# and also to serve static files from the frontend service
+# the frontend service is running on port 3000 and the backend service is running on port 5000
+# the nginx server is running on port 80
+# the nginx server will route traffic to the frontend service for all requests except for /api/* requests
+# which will be routed to the backend service
+# the nginx server will also serve static files from the frontend service
+
+# default.conf file
+
+server {
+    listen 80;
+
+    location /api/ {
+        proxy_pass http://grocery-backend:5000/;
+    }
+
+    location / {
+        proxy_pass http://grocery-frontend:3000/;
+    }
+}
+
+
+# for mongo container change in .env file 
+# we have to change the mongo connection string in the .env file of grocery-backend service
+# the connection string is used to connect to the mongoDB database
+# the connection string is in the following format
+# mongodb://<username>:<password>@mongo:27017/<database_name>?authSource=admin
+MONGO_URI=mongodb://mongo:27017/grocerydb
