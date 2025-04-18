@@ -1,37 +1,35 @@
 # Stage 1: Build the React application
-FROM node:16-alpine as build
+FROM node:16-alpine AS build-stage
 
 # Set the working directory in the container to /app
 WORKDIR /app
 
-#copy package.json and package-lock.json first for dependency installation
+# Copy package.json and package-lock.json first for dependency installation
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-#copy source code to the container
+# Copy the source code to the container
 COPY . .
 
 # Build the React application
 RUN npm run build
 
-#stage2: Setup the production environment
+# Stage 2: Setup the production environment
+FROM node:16-alpine
 
-#install pm2 globally
-RUN npm install -g pm2
-
-#set the working directory in the container to /app
+# Set the working directory in the container to /app
 WORKDIR /app
 
-#copy the build files from the previous stage
-COPY --from=build /app/build ./build
+# Install the http-server to serve static files
+RUN npm install -g http-server
 
-#install serve for statuic file serving
-RUN npm install -g serve
+# Copy the build files from the 'build-stage' into the current stage's '/app/build' folder
+COPY --from=build-stage /app/build ./build
 
 # Expose the application port
 EXPOSE 3000
 
-# Start the application using pm2
-CMD ["pm2-runtime", "serve", "-s", "build", "-l", "3000", "--name", "homeapp"] 
+# Start the application using http-server
+CMD ["http-server", "./build", "-p", "3000", "--spa"]
