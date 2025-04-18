@@ -1,49 +1,48 @@
-#docker compose file for an grocery app with frontend, backend and mongoDB
 
+# Docker Compose file for a Grocery App with frontend, backend, and MongoDB
 
-services :
-    nginx:
-      image: nginx:latest
-      container_name: nginx
-      ports:
-        - "80:80"
-      volumes:
-        - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      depends_on:
-        - grocery-frontend
-        - grocery-backend
+services:
+  nginx:                        # NGINX reverse proxy
+    image: nginx:latest         # Use latest official NGINX image
+    container_name: nginx       # Name the container "nginx"
+    ports:
+      - "80:80"                 # Expose container port 80 to host port 80
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf  # Mount custom NGINX config
+    depends_on:
+      - grocery-frontend        # Wait for frontend container to be ready
+      - grocery-backend         # Wait for backend container to be ready
 
-    grocery-frontend:
-      build:
-        context: ./GroceryAppFE/
-        dockerfile: Dockerfile
-      container_name: grocery-frontend
-      ports:
-        - "3000:3000"
-      depends_on:
-        - grocery-backend
+  grocery-frontend:             # React frontend app
+    build:
+      context: ./GroceryAppFE/  # Build context is GroceryAppFE directory
+      dockerfile: Dockerfile    # Use the Dockerfile inside GroceryAppFE
+    container_name: grocery-frontend  # Name the container
+    ports:
+      - "3000:3000"             # Expose frontend on port 3000
+    depends_on:
+      - grocery-backend         # Start after backend is ready
 
-    grocery-backend:
-      build:
-        context: ./GroceryAppBE-/
-        dockerfile: Dockerfile
-      container_name: grocery-backend
-      ports:
-        - "5000:5000"
-      env_file:
-        - ./GroceryAppBE-/.env
-      depends_on:
-        - mongo
+  grocery-backend:              # Node.js backend app
+    build:
+      context: ./GroceryAppBE-/ # Build context is GroceryAppBE- directory
+      dockerfile: Dockerfile    # Use the Dockerfile inside GroceryAppBE-
+    container_name: grocery-backend  # Name the container
+    ports:
+      - "5000:5000"             # Expose backend on port 5000
+    env_file:
+      - ./GroceryAppBE-/.env    # Load environment variables from .env file
+    depends_on:
+      - mongo                   # Start after MongoDB is ready
 
-
-    mongo:
-      image: mongo:latest
-      container_name: mongo
-      ports:
-        - "27017:27017"
-      volumes:
-        - mongo-data:/data/db
+  mongo:                        # MongoDB database
+    image: mongo:latest         # Use latest official MongoDB image
+    container_name: mongo       # Name the container
+    ports:
+      - "27017:27017"           # Expose MongoDB on port 27017
+    volumes:
+      - mongo-data:/data/db     # Persist data to a named Docker volume
 
 volumes:
-  mongo-data:
-    driver: local
+  mongo-data:                   # Named volume for MongoDB data
+    driver: local               # Use local driver for volume
