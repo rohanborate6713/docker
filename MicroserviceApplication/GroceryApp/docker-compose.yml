@@ -1,4 +1,5 @@
-version: '3.8'
+#docker compose file for an grocery app with frontend, backend and mongoDB
+
 
 services :
     nginx:
