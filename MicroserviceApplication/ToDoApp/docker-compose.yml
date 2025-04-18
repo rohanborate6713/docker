@@ -1,0 +1,47 @@
+services:
+  nginx:                        # NGINX reverse proxy
+    image: nginx:latest         # Use latest official NGINX image
+    container_name: nginx       # Name the container "nginx"
+    ports:
+      - "80:80"                 # Expose container port 80 to host port 80
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf  # Mount custom NGINX config
+    depends_on:
+      - todos-frontend        # Wait for frontend container to be ready
+      - todos-backend         # Wait for backend container to be ready
+
+
+  todos-frontend:             # React frontend app
+    build:
+      context: ./ToDoAppFe/  # Build context is ToDoAppFE directory
+      dockerfile: Dockerfile    # Use the Dockerfile inside ToDoAppFE
+    container_name: todos-frontend  # Name the container
+    ports:
+      - "3000:3000"             # Expose frontend on port 3000
+    depends_on:
+      - todos-backend         # Start after backend is ready
+
+
+  todos-backend:              # Node.js backend app
+    build:
+      context: ./ToDoAppBe/ # Build context is ToDoAppBE directory
+      dockerfile: Dockerfile    # Use the Dockerfile inside ToDoAppBE
+    container_name: todos-backend  # Name the container
+    ports:
+      - "5000:5000"             # Expose backend on port 5000
+    env_file:
+      - ./ToDoAppBE/.env    # Load environment variables from .env file
+    depends_on:
+      - mongo                   # Start after MongoDB is ready        
+
+  mongo:                        # MongoDB database
+    image: mongo:latest         # Use latest official MongoDB image
+    container_name: mongo       # Name the container
+    ports:
+      - "27017:27017"           # Expose MongoDB on port 27017
+    volumes:
+      - mongo-data:/data/db     # Persist data to a named Docker volume
+
+volumes : 
+  mongo-data:                   # Named volume for MongoDB data
+    driver: local               # Use local driver for volume          
